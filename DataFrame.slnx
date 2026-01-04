@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="DataFrame.vcxproj" Id="c7f99fd0-d91c-46d9-bb74-e4dc7e6c1fc1" />
+</Solution>
