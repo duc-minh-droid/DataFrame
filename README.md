@@ -4,12 +4,12 @@ A lightweight, high-performance C++ library for data manipulation and analysis, 
 
 ## Features
 
-- ?? **Fast and Efficient**: Built with performance in mind using modern C++
-- ?? **DataFrame Operations**: Select, filter, head, and more
-- ?? **Column-based Storage**: Efficient columnar data structure
-- ?? **Groupby Operations**: Group data and perform aggregations (count, sum, mean)
-- ?? **CSV Support**: Read data from CSV files or strings
-- ?? **Method Chaining**: Fluent API for data pipelines
+- **Fast and Efficient**: Built with performance in mind using modern C++
+- **DataFrame Operations**: Select, filter, head, and more
+- **Column-based Storage**: Efficient columnar data structure
+- **Groupby Operations**: Group data and perform aggregations (count, sum, mean)
+- **CSV Support**: Read data from CSV files or strings
+- **Method Chaining**: Fluent API for data pipelines
 
 ## Quick Start
 
@@ -185,15 +185,6 @@ This project is open source. Feel free to use and modify as needed.
 ## Contributing
 
 Contributions are welcome! Please feel free to submit issues or pull requests.
-
-## Future Enhancements
-
-- [ ] More aggregation functions (std, var, quantile)
-- [ ] Join/merge operations
-- [ ] Sorting capabilities
-- [ ] More data types (string, datetime)
-- [ ] Parallel processing for large datasets
-- [ ] Additional file format support (JSON, Parquet)
 
 ## Author
 
