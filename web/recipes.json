@@ -1,0 +1,103 @@
+{
+  "datasets": [
+    {
+      "id": "sales",
+      "name": "Sales orders",
+      "file": "sales.csv",
+      "files": ["sales.csv", "regions.csv"],
+      "description": "24 orders across four regions. regions.csv has a manager and target per region (no West, plus an extra Central).",
+      "recipes": [
+        {
+          "id": "sales-tour",
+          "title": "Full tour",
+          "blurb": "Every operation in one chain: filter, select, sort, group-by, join.",
+          "pipeline": "load:sales.csv | filter:units>=4 | select:region,product,units,price | sort:price:desc | groupby:region:count,sum(units),mean(price) | join:regions.csv:region"
+        },
+        {
+          "id": "sales-top",
+          "title": "Biggest tickets",
+          "blurb": "Keep orders of 5+ units, drop columns, sort by price, take the top 10.",
+          "pipeline": "load:sales.csv | filter:units>=5 | select:order_id,region,product,units,price | sort:price:desc | head:10"
+        },
+        {
+          "id": "sales-products",
+          "title": "Units per product",
+          "blurb": "Group by product and rank by units sold.",
+          "pipeline": "load:sales.csv | groupby:product:count,sum(units),min(price),max(price) | sort:units_sum:desc"
+        },
+        {
+          "id": "sales-describe",
+          "title": "Summary stats",
+          "blurb": "describe() over the numeric columns.",
+          "pipeline": "load:sales.csv | select:units,price,discount | describe"
+        }
+      ]
+    },
+    {
+      "id": "iris",
+      "name": "Iris (24-row sample)",
+      "file": "iris.csv",
+      "files": ["iris.csv", "species.csv"],
+      "description": "Eight flowers per species from Fisher's iris data. species.csv adds a common name and native range.",
+      "recipes": [
+        {
+          "id": "iris-species",
+          "title": "Means by species",
+          "blurb": "Group-by on a categorical key with four aggregates.",
+          "pipeline": "load:iris.csv | groupby:species:count,mean(sepal_length),mean(petal_length),max(petal_width)"
+        },
+        {
+          "id": "iris-join",
+          "title": "Join common names",
+          "blurb": "Drop setosa, join the species table, sort by petal length.",
+          "pipeline": "load:iris.csv | filter:species!=setosa | join:species.csv:species | select:species,common_name,petal_length,petal_width | sort:petal_length:desc"
+        },
+        {
+          "id": "iris-describe",
+          "title": "Summary stats",
+          "blurb": "describe() on all four measurements.",
+          "pipeline": "load:iris.csv | describe"
+        },
+        {
+          "id": "iris-long",
+          "title": "Long petals",
+          "blurb": "Filter, sort ascending, keep three columns.",
+          "pipeline": "load:iris.csv | filter:petal_length>=4.5 | sort:petal_length | select:species,petal_length,petal_width"
+        }
+      ]
+    },
+    {
+      "id": "trades",
+      "name": "Trade ticks",
+      "file": "trades.csv",
+      "files": ["trades.csv", "tickers.csv"],
+      "description": "24 one-minute ticks with a -1/0/1 signal, like the benchmark data. tickers.csv maps tickers to sectors (CVX is missing).",
+      "recipes": [
+        {
+          "id": "trades-signal",
+          "title": "Signal buckets",
+          "blurb": "The benchmark pipeline: drop flat signals, group by a numeric key.",
+          "pipeline": "load:trades.csv | filter:signal!=0 | groupby:signal:count,mean(price),sum(volume)"
+        },
+        {
+          "id": "trades-sector",
+          "title": "Volume by sector",
+          "blurb": "Join tickers to sectors, then aggregate.",
+          "pipeline": "load:trades.csv | join:tickers.csv:ticker | groupby:sector:count,sum(volume),max(price) | sort:volume_sum:desc"
+        },
+        {
+          "id": "trades-volume",
+          "title": "Heaviest minutes",
+          "blurb": "Select, sort by volume, head.",
+          "pipeline": "load:trades.csv | select:minute,ticker,price,volume | sort:volume:desc | head:8"
+        },
+        {
+          "id": "trades-msft",
+          "title": "One ticker",
+          "blurb": "Filter a categorical column, then describe.",
+          "pipeline": "load:trades.csv | filter:ticker==MSFT | describe"
+        }
+      ]
+    }
+  ]
+}

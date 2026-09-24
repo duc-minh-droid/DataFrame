@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DataFrame Playground</title>
+  <meta name="description" content="Watch a small C++ columnar DataFrame library filter, select, sort, group, join and describe data, step by step, from traces emitted by the real binary.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233987e5'/%3E%3Cpath d='M8 9h16M8 16h16M8 23h16M13 6v20' stroke='white' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7"/><path d="M8 9h16M8 16h16M8 23h16M13 6v20"/></svg>
+      <div>
+        <h1>DataFrame <span>playground</span></h1>
+        <p>A columnar C++20 DataFrame, animated from its own <code>--trace</code> output</p>
+      </div>
+    </div>
+    <nav class="datasets" id="datasets" aria-label="Dataset"></nav>
+    <button class="icon-btn" id="theme" title="Toggle light / dark" aria-label="Toggle theme">
+      <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+    </button>
+  </header>
+
+  <section class="builder">
+    <div class="builder-row">
+      <div class="chips" id="chips"></div>
+      <div class="transport">
+        <button class="icon-btn" id="restart" title="Restart (Home)"><svg viewBox="0 0 24 24"><path d="M6 5v14M19 5l-10 7 10 7z"/></svg></button>
+        <button class="icon-btn" id="prev" title="Previous step (Left)"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <button class="icon-btn play" id="play" title="Play / pause (Space)"><svg viewBox="0 0 24 24"><path class="i-play" d="M8 5l11 7-11 7z"/><path class="i-pause" d="M8 5v14M16 5v14"/></svg></button>
+        <button class="icon-btn" id="next" title="Next step (Right)"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+        <select id="speed" title="Animation speed" aria-label="Animation speed">
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1x</option>
+          <option value="2">2x</option>
+        </select>
+      </div>
+    </div>
+    <div class="builder-row second">
+      <div class="recipes" id="recipes"></div>
+      <div class="source" id="source"></div>
+    </div>
+  </section>
+
+  <main class="layout">
+    <section class="stage-card">
+      <div class="stage-head" id="stage-head"></div>
+      <div class="stage" id="stage">
+        <div class="stage-inner" id="stage-inner">
+          <svg class="links" id="links"></svg>
+          <div class="overlay" id="overlay"></div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="engine" id="engine">
+      <div class="panel">
+        <h2>C++ call chain</h2>
+        <pre class="code" id="code"></pre>
+      </div>
+      <div class="panel stats" id="stats"></div>
+      <div class="panel">
+        <h2>DataFrameView internals <span class="hint" id="view-hint"></span></h2>
+        <div class="viewbox">
+          <div class="vlabel"><code>df_</code><span id="view-frame"></span></div>
+          <div class="vlabel"><code>column_indices_</code></div>
+          <div class="idx-strip" id="col-idx"></div>
+          <div class="vlabel"><code>row_indices_</code><span class="muted" id="row-count"></span></div>
+          <div class="idx-strip" id="row-idx"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Column storage <span class="hint">one <code>std::vector&lt;double&gt;</code> per column</span></h2>
+        <div class="storage" id="storage"></div>
+      </div>
+      <div class="panel cli">
+        <h2>Pipeline text <span class="hint">edit + Enter to run</span></h2>
+        <textarea id="pipe-text" spellcheck="false" rows="3"></textarea>
+        <div class="cli-line"><span>$</span> <code id="cli"></code></div>
+      </div>
+    </aside>
+  </main>
+
+  <div class="tooltip" id="tooltip" role="tooltip"></div>
+  <div class="popover" id="popover"></div>
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
