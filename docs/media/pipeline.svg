@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 330" width="920" height="330" font-family="ui-sans-serif, system-ui, Segoe UI, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #ffffff; }
+    .t { fill: #16191d; font-size: 13px; font-weight: 650; }
+    .m { fill: #5b6270; font-size: 11.5px; }
+    .mono { font-family: ui-monospace, Consolas, Menlo, monospace; }
+    .node { fill: #f5f6f8; stroke: #cfd4dc; stroke-width: 1.2; }
+    .view { fill: #e3f5ed; stroke: #7cc7a4; }
+    .mat { fill: #ece9fb; stroke: #9a8fe0; }
+    .web { fill: #e8eefb; stroke: #9db5e6; }
+    .ln { stroke: #8a929e; stroke-width: 1.6; fill: none; }
+    .ah { fill: #8a929e; }
+    .dash { stroke-dasharray: 5 4; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #0f1319; }
+      .t { fill: #e7eaf0; }
+      .m { fill: #98a2b3; }
+      .node { fill: #161b23; stroke: #313a48; }
+      .view { fill: #16332a; stroke: #2e8a64; }
+      .mat { fill: #241f45; stroke: #6f63c9; }
+      .web { fill: #1b2a44; stroke: #3d6ab3; }
+      .ln { stroke: #6b7585; }
+      .ah { fill: #6b7585; }
+    }
+  </style>
+  <rect class="bg" width="920" height="330" rx="14"/>
+
+  <!-- row 1: the pipeline -->
+  <rect class="node" x="24" y="30" width="116" height="62" rx="10"/>
+  <text class="t" x="40" y="56">sales.csv</text><text class="m mono" x="40" y="76">load:</text>
+
+  <rect class="node" x="170" y="30" width="140" height="62" rx="10"/>
+  <text class="t" x="186" y="56">DataFrame</text><text class="m" x="186" y="76">owns column vectors</text>
+
+  <rect class="node view" x="340" y="22" width="250" height="78" rx="10"/>
+  <text class="t" x="356" y="46">DataFrameView chain</text>
+  <text class="m mono" x="356" y="66">filter → select → sort → head</text>
+  <text class="m" x="356" y="86">index vectors only, 0 bytes copied</text>
+
+  <rect class="node mat" x="620" y="22" width="276" height="78" rx="10"/>
+  <text class="t" x="636" y="46">new DataFrame</text>
+  <text class="m mono" x="636" y="66">groupby.agg | join | describe</text>
+  <text class="m" x="636" y="86">materialized; later steps view it</text>
+
+  <path class="ln" d="M140 61 H166"/><path class="ah" d="M168 61 l-8 -5 v10 z"/>
+  <path class="ln" d="M310 61 H336"/><path class="ah" d="M338 61 l-8 -5 v10 z"/>
+  <path class="ln" d="M590 61 H616"/><path class="ah" d="M618 61 l-8 -5 v10 z"/>
+  <path class="ln dash" d="M758 100 C 758 128, 465 128, 465 104"/><path class="ah" d="M465 101 l-5 9 h10 z"/>
+  <text class="m" x="530" y="140">a view over the new frame</text>
+
+  <!-- row 2: tracing -->
+  <rect class="node" x="24" y="176" width="286" height="70" rx="10"/>
+  <text class="t" x="40" y="200">Pipeline.h  (pipeline::Runner)</text>
+  <text class="m" x="40" y="220">records before / after tables, row ids,</text>
+  <text class="m" x="40" y="236">view index vectors, op mappings, timings</text>
+
+  <rect class="node" x="340" y="176" width="250" height="70" rx="10"/>
+  <text class="t mono" x="356" y="200">DataFrame --trace "…"</text>
+  <text class="m" x="356" y="220">JSON: kept/dropped, sort order,</text>
+  <text class="m" x="356" y="236">buckets, join pairs, histograms</text>
+
+  <rect class="node web" x="620" y="176" width="276" height="70" rx="10"/>
+  <text class="t" x="636" y="200">web/ playground</text>
+  <text class="m" x="636" y="220">FLIP rows, column slides, buckets,</text>
+  <text class="m" x="636" y="236">join curves, stat cards</text>
+
+  <path class="ln" d="M310 211 H336"/><path class="ah" d="M338 211 l-8 -5 v10 z"/>
+  <path class="ln" d="M590 211 H616"/><path class="ah" d="M618 211 l-8 -5 v10 z"/>
+  <path class="ln dash" d="M167 100 V 172"/><path class="ah" d="M167 174 l-5 -9 h10 z"/>
+  <text class="m" x="176" y="150">wraps the real library calls</text>
+
+  <!-- js port -->
+  <rect class="node" x="620" y="268" width="276" height="44" rx="10"/>
+  <text class="t mono" x="636" y="295">engine.js</text>
+  <text class="m" x="716" y="295">JS port for edited pipelines</text>
+  <rect class="node" x="340" y="268" width="250" height="44" rx="10"/>
+  <text class="t mono" x="356" y="295">tools/verify-port.mjs</text>
+  <path class="ln dash" d="M590 290 H616"/><path class="ln dash" d="M465 268 V 248"/>
+  <text class="m" x="326" y="295" text-anchor="end">every number compared with === against the binary</text>
+</svg>
