@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 #include <functional>
+#include <utility>
 
 // Forward declaration to avoid circular dependency
 class GroupedDataFrame;
@@ -17,7 +18,7 @@ private:
 
 public:
 	DataFrameView(const DataFrame* df, std::vector<size_t> column_indices, std::vector<size_t> row_indices)
-		: df_(df), column_indices_(std::move(column_indices)), row_indices_(row_indices)
+		: df_(df), column_indices_(std::move(column_indices)), row_indices_(std::move(row_indices))
 	{
 		for (size_t view_idx = 0; view_idx < column_indices_.size(); ++view_idx) {
 			size_t df_idx = column_indices_[view_idx];
@@ -46,7 +47,25 @@ public:
 		return df_->getColumnName(column_indices_.at(idx));
 	}
 	size_t getColumnIdx(const std::string name) const {
-		return name_to_view_idx_.at(name);
+		auto it = name_to_view_idx_.find(name);
+		if (it == name_to_view_idx_.end()) {
+			throw std::out_of_range("No column named '" + name + "' in view");
+		}
+		return it->second;
+	}
+	bool hasColumn(const std::string& name) const {
+		return name_to_view_idx_.count(name) > 0;
+	}
+
+	// The frame this view points into, and the index vectors that define it.
+	const DataFrame& frame() const { return *df_; }
+	const std::vector<size_t>& rowIndices() const { return row_indices_; }
+	const std::vector<size_t>& columnIndices() const { return column_indices_; }
+	bool isCategorical(size_t view_col_idx) const {
+		return df_->isCategorical(column_indices_.at(view_col_idx));
+	}
+	std::string formatCell(size_t row, size_t view_col_idx) const {
+		return df_->formatCell(column_indices_.at(view_col_idx), at(row, view_col_idx));
 	}
 	GroupedDataFrame groupby(const std::string colName) const;
 	DataFrameView select(std::vector<std::string> column_names) const;
@@ -76,5 +95,20 @@ public:
 
 		return DataFrameView(df_, column_indices_, new_rows);
 	}
+
+	// Stable sort of the row index vector by one column. No data is moved.
+	DataFrameView sort(const std::string& col, bool ascending = true) const;
+
+	// Copy the visible rows/columns into a new, owning DataFrame.
+	DataFrame materialize() const;
+
+	// count / mean / std / min / 25% / 50% / 75% / max for every numeric column.
+	DataFrame describe() const;
+
+	// Inner hash join on a key column present in both views. Output rows follow
+	// left order; for each left row, matches appear in right order. If `pairs`
+	// is given it receives the (left view row, right view row) of every output row.
+	DataFrame join(const DataFrameView& right, const std::string& key,
+		std::vector<std::pair<size_t, size_t>>* pairs = nullptr) const;
 };
 

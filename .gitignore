@@ -84,3 +84,10 @@ ipch/
 # OS files
 .DS_Store
 Thumbs.db
+
+# CMake / g++ build output
+build/
+
+# Vercel
+.vercel/
+node_modules/

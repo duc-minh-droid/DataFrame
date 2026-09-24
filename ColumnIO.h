@@ -38,7 +38,7 @@ inline std::ostream& operator<<(std::ostream& os, const DataFrame& df) {
 	for (size_t row = 0; row < df.numRows(); ++row) {
 		for (size_t col = 0; col < df.numCols(); ++col) {
 			if (col > 0) os << "\t";
-			os << std::setw(12) << df[col][row];
+			os << std::setw(12) << df.formatCell(col, df[col][row]);
 		}
 		os << "\n";
 	}
@@ -65,7 +65,7 @@ inline std::ostream& operator<<(std::ostream& os, const DataFrameView& view) {
 	for (size_t row = 0; row < view.numRows(); ++row) {
 		for (size_t col = 0; col < view.numCols(); ++col) {
 			if (col > 0) os << "\t";
-			os << std::setw(12) << view.at(row, col);
+			os << std::setw(12) << view.formatCell(row, col);
 		}
 		os << "\n";
 	}

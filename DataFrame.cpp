@@ -1,6 +1,22 @@
 #include "DataFrame.h"
 #include "DataFrameView.h"
 #include "GroupedDataFrame.h"
+#include <sstream>
+
+std::string DataFrame::formatCell(size_t idx, double v) const {
+	const auto& dict = labels_.at(idx);
+	if (!dict.empty()) {
+		size_t code = static_cast<size_t>(v);
+		return code < dict.size() ? dict[code] : std::string("?");
+	}
+	std::ostringstream os;
+	os << v;
+	return os.str();
+}
+
+DataFrameView DataFrame::view() const {
+	return DataFrameView(this, all_column_indices(), all_row_indices());
+}
 
 DataFrameView DataFrame::head(size_t n) const {
 	auto row_indices = all_row_indices();
@@ -15,14 +31,13 @@ DataFrameView DataFrame::head(size_t n) const {
 DataFrameView DataFrame::select(std::vector<std::string> column_names) const {
 	std::vector<size_t> indices;
 	for (auto name : column_names) {
-		indices.push_back(name_to_index_.at(name));
+		indices.push_back(columnIndex(name));
 	}
 	return DataFrameView(this, indices, all_row_indices());
 }
 
 GroupedDataFrame DataFrame::groupby(const std::string colName) const {
-	auto indices = all_column_indices();
-	DataFrameView view(this, indices, all_row_indices());
-	int key_view_idx = view.getColumnIdx(colName);
-	return GroupedDataFrame(view, key_view_idx);
+	DataFrameView v = view();
+	size_t key_view_idx = v.getColumnIdx(colName);
+	return GroupedDataFrame(v, key_view_idx);
 }
