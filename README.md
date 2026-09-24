@@ -1,5 +1,7 @@
 # DataFrame
 
+**Live playground:** https://dataframe-wine.vercel.app
+
 A small pandas-style DataFrame library in C++20: columnar storage, zero-copy views, group-by, hash join and `describe()`, plus a browser playground that animates what each operation does, driven by traces from the real binary.
 
 ![Playground demo: filter, select, sort, group-by and join on the sales dataset](docs/media/demo.gif)
